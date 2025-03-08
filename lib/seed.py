@@ -5,9 +5,23 @@ import random
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models import Game
+from lib.models import Game, Base
 
 fake = Faker()
+
+def seed_data(session):
+    """Seed the database with sample game data."""
+    for _ in range(3):  # Adjust the number of records as needed
+        game = Game(
+            title=fake.catch_phrase(),
+            genre=fake.word(),
+            platform=fake.word(),
+            price=random.randint(10, 60)
+        )
+        session.add(game)
+    session.commit()
+
+    Base.metadata.create_all(bind=session.bind)  # Create the tables in the database
 
 if __name__ == '__main__':
     
